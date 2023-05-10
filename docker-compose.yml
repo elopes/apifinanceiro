@@ -1,0 +1,44 @@
+version: '3'
+services:
+  # Serviço do banco de dados MySQL
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: apifinanceiro
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # Serviço da aplicação Laravel
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/var/www/html
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: apiFinanceiro
+      DB_USERNAME: apiFinanceiro
+      DB_PASSWORD: apiFinanceiro
+    depends_on:
+      - db
+
+  # Serviço do servidor Nginx
+  web:
+    image: nginx:stable-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+volumes:
+  db_data:

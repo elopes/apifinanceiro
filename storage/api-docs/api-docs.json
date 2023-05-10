@@ -1,0 +1,522 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Wehrmann - API Transações financeiras",
+        "description": "Documentação da API Transações financeiras",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/carteira": {
+            "get": {
+                "tags": [
+                    "carteira"
+                ],
+                "summary": "Recupera uma lista de carteiras",
+                "operationId": "68b65eff4d319e4736b4e145e3ac5871",
+                "responses": {
+                    "200": {
+                        "description": "Uma lista de carteiras",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Carteira"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "carteira"
+                ],
+                "summary": "Cria uma nova carteira",
+                "operationId": "fcc2ff38521e5bc975861a77bd599073",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Carteira"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Carteira criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Carteira"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição inválida"
+                    }
+                }
+            }
+        },
+        "/api/v1/carteira/{id}": {
+            "get": {
+                "tags": [
+                    "carteira"
+                ],
+                "summary": "Recupera uma carteira pelo ID",
+                "operationId": "cedb21f0907249cb9194820b79adac48",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Carteira encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Carteira"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Carteira não encontrada"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "carteira"
+                ],
+                "summary": "Atualiza uma carteira pelo ID",
+                "operationId": "1d94152dbe871095dde55a6ec3d28eca",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Carteira"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Carteira atualizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Carteira"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Carteira não encontrada"
+                    }
+                }
+            }
+        },
+        "/api/v1/transferencias": {
+            "get": {
+                "tags": [
+                    "transfere"
+                ],
+                "summary": "Recupera todas as transferências",
+                "description": "Este método recupera todas as transferências e retorna uma resposta JSON com um código de status 200.",
+                "operationId": "7810b4abd8218105104776e1babad49e",
+                "responses": {
+                    "200": {
+                        "description": "Uma lista de transferências",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Transfere"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/transfere": {
+            "post": {
+                "tags": [
+                    "transfere"
+                ],
+                "summary": "Realiza uma transferência de valores entre usuários",
+                "description": "Este método lida com a transferência de valores entre usuários. Ele recebe uma solicitação com os parâmetros origem, destino e quantia. O método verifica se o usuário de origem é um lojista e se ele tem saldo suficiente para realizar a transferência. Se essas condições forem atendidas, uma transação é iniciada para atualizar os saldos das carteiras dos usuários de origem e destino.",
+                "operationId": "b2cb0d462fb2c5fb5acbcb159e072d8e",
+                "requestBody": {
+                    "description": "Dados da transferência",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "origem",
+                                    "destino",
+                                    "quantia"
+                                ],
+                                "properties": {
+                                    "origem": {
+                                        "description": "ID do usuário de origem",
+                                        "type": "integer"
+                                    },
+                                    "destino": {
+                                        "description": "ID do usuário de destino",
+                                        "type": "integer"
+                                    },
+                                    "quantia": {
+                                        "description": "Quantia a ser transferida",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transferência realizada com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro na transferência (lojista não pode enviar transferências ou saldo insuficiente)"
+                    }
+                }
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Recupera uma lista de usuários",
+                "operationId": "b343fe695d1beaa03b7deb8449dd1b7c",
+                "responses": {
+                    "200": {
+                        "description": "Uma lista de usuários",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Cria um novo usuário",
+                "operationId": "71d86dd873f9e567415d5da5929a0dea",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Requisição inválida"
+                    }
+                }
+            }
+        },
+        "/api/v1/users/{id}": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Recupera um usuário pelo ID",
+                "operationId": "0197efcfd303b59ccdaad3e01097a0e0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Atualiza um usuário pelo ID",
+                "operationId": "e27513375b71e3b3dcc043da6f62129c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Exclui um usuário pelo ID",
+                "operationId": "ae967f8cf847f7d2ad9eba19833f58cd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Usuário excluído com sucesso"
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Carteira": {
+                "title": "Carteira",
+                "description": "Modelo de carteira",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "saldo": {
+                        "type": "number",
+                        "example": "100.00"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Carteira"
+                }
+            },
+            "Transfere": {
+                "title": "Transfere",
+                "description": "Modelo de transferência",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "origem_id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "transferido_de": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "João"
+                    },
+                    "destinatario_id": {
+                        "type": "integer",
+                        "example": "2"
+                    },
+                    "recebido_por": {
+                        "type": "string",
+                        "maxLength": 32,
+                        "example": "Maria"
+                    },
+                    "quantia": {
+                        "type": "number",
+                        "example": "100.00"
+                    },
+                    "origem": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "destino": {
+                        "type": "integer",
+                        "example": "2"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Transfere"
+                }
+            },
+            "User": {
+                "title": "User",
+                "description": "Modelo de usuário",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "João"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "joao@example.com"
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2022-01-01 12:00:00"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "User"
+                }
+            },
+            "UserPerfil": {
+                "title": "UserPerfil",
+                "description": "Modelo de perfil de usuário",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "João"
+                    },
+                    "tipo": {
+                        "type": "string",
+                        "example": "comum"
+                    },
+                    "cpf": {
+                        "type": "string",
+                        "example": "123.456.789-00"
+                    },
+                    "cnpj": {
+                        "type": "string",
+                        "example": "12.345.678/0001-99"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "UserPerfil"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "carteira",
+            "description": "Operações relacionadas a carteira do usuário"
+        },
+        {
+            "name": "transfere",
+            "description": "Operações relacionadas a transferências entre usuários comuns e lojistas"
+        },
+        {
+            "name": "user",
+            "description": "Operações relacionadas a usuários"
+        }
+    ]
+}
